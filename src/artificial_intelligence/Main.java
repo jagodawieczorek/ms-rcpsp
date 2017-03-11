@@ -8,7 +8,7 @@ package artificial_intelligence;
  * @since 10.03.2017
  */
 public class Main {
-    private static final String TEST_DATA = "assets/def_small/10_3_5_3.def";
+    private static final String TEST_DATA = "assets/def_small/10_5_8_5.def";
 
     /**
      * Main function
@@ -18,5 +18,6 @@ public class Main {
     public static void main(String[] args) {
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(TEST_DATA);
         Population population = geneticAlgorithm.initializePopulation();
+        population.evaluateDuration();
     }
 }

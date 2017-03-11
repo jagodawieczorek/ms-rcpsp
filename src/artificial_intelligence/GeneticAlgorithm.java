@@ -5,6 +5,8 @@ import msrcpsp.scheduling.Resource;
 import msrcpsp.scheduling.Schedule;
 import msrcpsp.scheduling.Task;
 import msrcpsp.scheduling.greedy.Greedy;
+import msrcpsp.validation.BaseValidator;
+import msrcpsp.validation.CompleteValidator;
 
 import java.util.List;
 import java.util.Random;
@@ -119,6 +121,17 @@ public class GeneticAlgorithm {
         }
 
         return new Population(schedules);
+    }
+
+    /**
+     * Validate schedule
+     *
+     * @param schedule - schedule
+     */
+    void validateSchedule(Schedule schedule) {
+        BaseValidator validator = new CompleteValidator();
+        System.out.println(validator.validate(schedule));
+        System.out.println(validator.getErrorMessages());
     }
 
     /**
