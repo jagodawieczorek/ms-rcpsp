@@ -13,16 +13,29 @@ public class Population {
     private Schedule[] schedules;
     private int id;
     private double bestTime;
-    private double avgTime;
     private double worstTime;
+    private double sumTime;
+    private double avgTime;
 
     /**
      * Population constructor.
      *
      * @param schedules - population of schedules
+     * @param id        - population id
      */
-    Population(Schedule[] schedules) {
+    Population(Schedule[] schedules, int id) {
         this.schedules = schedules;
+        this.id = id;
+    }
+
+    /**
+     * To String method
+     *
+     * @return String
+     */
+    public String toString() {
+        return "Id: " + this.id + ", bestTime: " + this.bestTime + ", worstTime: " + this.worstTime + ", avgTime: "
+                + this.avgTime;
     }
 
     /**
@@ -47,6 +60,7 @@ public class Population {
 
         this.bestTime = bestTime;
         this.worstTime = worstTime;
+        this.sumTime = sumTime;
         this.avgTime = sumTime / schedules.length;
     }
 

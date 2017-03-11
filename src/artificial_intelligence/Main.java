@@ -17,7 +17,16 @@ public class Main {
      */
     public static void main(String[] args) {
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(TEST_DATA);
-        Population population = geneticAlgorithm.initializePopulation();
-        population.evaluateDuration();
+        int generation = 0;
+        Population population0 = geneticAlgorithm.initializePopulation(0);
+        population0.evaluateDuration();
+        System.out.println(population0.toString());
+
+        while (generation < geneticAlgorithm.getGenerations()) {
+            Population population = geneticAlgorithm.initializePopulation(generation + 1);
+            population.evaluateDuration();
+            System.out.println(population.toString());
+            generation += 1;
+        }
     }
 }

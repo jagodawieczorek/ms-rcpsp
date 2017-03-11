@@ -111,16 +111,17 @@ public class GeneticAlgorithm {
     /**
      * Initialize population
      *
+     * @param id - population id
      * @return Population
      */
-    Population initializePopulation() {
+    Population initializePopulation(int id) {
         Schedule[] schedules = new Schedule[this.getPopSize()];
 
         for (int i = 0; i < this.getPopSize(); i++) {
             schedules[i] = this.randomInitializeSchedule();
         }
 
-        return new Population(schedules);
+        return new Population(schedules, id);
     }
 
     /**
