@@ -4,6 +4,7 @@ import msrcpsp.io.MSRCPSPIO;
 import msrcpsp.scheduling.Resource;
 import msrcpsp.scheduling.Schedule;
 import msrcpsp.scheduling.Task;
+import msrcpsp.scheduling.greedy.Greedy;
 
 import java.util.List;
 import java.util.Random;
@@ -88,6 +89,19 @@ public class GeneticAlgorithm {
             Resource resource = resources.get(generator.nextInt(resources.size()));
             schedule.assign(task, resource);
         }
+
+        return this.buildTimestamps(schedule);
+    }
+
+    /**
+     * Assign time to tasks and resources. Greedy algorithm.
+     *
+     * @param schedule - schedule
+     * @return Schedule
+     */
+    Schedule buildTimestamps(Schedule schedule) {
+        Greedy greedy = new Greedy(schedule.getSuccesors());
+        greedy.buildTimestamps(schedule);
 
         return schedule;
     }
