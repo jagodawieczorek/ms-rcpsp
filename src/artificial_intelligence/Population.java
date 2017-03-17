@@ -2,7 +2,6 @@ package artificial_intelligence;
 
 import msrcpsp.evaluation.BaseEvaluator;
 import msrcpsp.evaluation.DurationEvaluator;
-import msrcpsp.scheduling.Schedule;
 
 /**
  * @author Jagoda Marszałek
@@ -10,7 +9,7 @@ import msrcpsp.scheduling.Schedule;
  * @since 11.03.2017
  */
 public class Population {
-    private Schedule[] schedules;
+    private Individual[] individuals;
     private int id;
     private double bestTime;
     private double worstTime;
@@ -20,11 +19,11 @@ public class Population {
     /**
      * Population constructor.
      *
-     * @param schedules - population of schedules
-     * @param id        - population id
+     * @param individuals - population of schedules
+     * @param id          - population id
      */
-    Population(Schedule[] schedules, int id) {
-        this.schedules = schedules;
+    Population(Individual[] individuals, int id) {
+        this.individuals = individuals;
         this.id = id;
     }
 
@@ -35,7 +34,7 @@ public class Population {
      */
     public String toString() {
         return "Id: " + this.id + ", bestTime: " + this.bestTime + ", worstTime: " + this.worstTime + ", avgTime: "
-                + this.avgTime;
+                + this.avgTime + ", sum time: " + this.sumTime;
     }
 
     /**
@@ -46,8 +45,8 @@ public class Population {
         double worstTime = 0;
         double sumTime = 0;
 
-        for (Schedule schedule : this.schedules) {
-            BaseEvaluator evaluator = new DurationEvaluator(schedule);
+        for (Individual individual : this.individuals) {
+            BaseEvaluator evaluator = new DurationEvaluator(individual.getSchedule());
             double duration = evaluator.evaluate();
             sumTime += duration;
             if (duration < bestTime || 0 == bestTime) {
@@ -61,25 +60,7 @@ public class Population {
         this.bestTime = bestTime;
         this.worstTime = worstTime;
         this.sumTime = sumTime;
-        this.avgTime = sumTime / schedules.length;
-    }
-
-    /**
-     * Get schedules
-     *
-     * @return Schedule[]
-     */
-    public Schedule[] getSchedules() {
-        return schedules;
-    }
-
-    /**
-     * Set schedules
-     *
-     * @param schedules - population of schedules
-     */
-    public void setSchedules(Schedule[] schedules) {
-        this.schedules = schedules;
+        this.avgTime = sumTime / individuals.length;
     }
 
     /**
@@ -152,5 +133,23 @@ public class Population {
      */
     public void setWorstTime(double worstTime) {
         this.worstTime = worstTime;
+    }
+
+    /**
+     * Get individuals
+     *
+     * @return Individual
+     */
+    public Individual[] getIndividuals() {
+        return individuals;
+    }
+
+    /**
+     * Set individuals
+     *
+     * @param individuals - individuals
+     */
+    public void setIndividuals(Individual[] individuals) {
+        this.individuals = individuals;
     }
 }

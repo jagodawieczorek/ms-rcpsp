@@ -1,5 +1,6 @@
 package artificial_intelligence;
 
+import msrcpsp.evaluation.DurationEvaluator;
 import msrcpsp.io.MSRCPSPIO;
 import msrcpsp.scheduling.Resource;
 import msrcpsp.scheduling.Schedule;
@@ -104,6 +105,7 @@ public class GeneticAlgorithm {
     Schedule buildTimestamps(Schedule schedule) {
         Greedy greedy = new Greedy(schedule.getSuccesors());
         greedy.buildTimestamps(schedule);
+        schedule.setEvaluator(new DurationEvaluator(schedule));
 
         return schedule;
     }
@@ -115,13 +117,26 @@ public class GeneticAlgorithm {
      * @return Population
      */
     Population initializePopulation(int id) {
-        Schedule[] schedules = new Schedule[this.getPopSize()];
+        Individual[] individuals = new Individual[this.getPopSize()];
 
         for (int i = 0; i < this.getPopSize(); i++) {
-            schedules[i] = this.randomInitializeSchedule();
+            Schedule schedule = this.randomInitializeSchedule();
+            individuals[i] = this.initializeIndividual(schedule);
         }
 
-        return new Population(schedules, id);
+        return new Population(individuals, id);
+    }
+
+    /**
+     * Initialize individual
+     *
+     * @param schedule - schedule
+     * @return Individual
+     */
+    Individual initializeIndividual(Schedule schedule) {
+        Individual individual = new Individual(schedule);
+
+        return individual;
     }
 
     /**
