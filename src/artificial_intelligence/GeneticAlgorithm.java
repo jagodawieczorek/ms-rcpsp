@@ -156,6 +156,13 @@ public class GeneticAlgorithm {
         System.out.println(validator.getErrorMessages());
     }
 
+    /**
+     * Create new population.
+     *
+     * @param population - population
+     * @param id         - population id
+     * @return Population
+     */
     Population createNewPopulation(Population population, int id) {
         this.setNewPopulation(new Population(id));
         Integer currentIndividual = 0;
@@ -193,6 +200,13 @@ public class GeneticAlgorithm {
         return individual;
     }
 
+    /**
+     * Crossover method.
+     *
+     * @param parent  - parent 1
+     * @param parent2 - parent 2
+     * @return Individual - child
+     */
     Individual crossover(Individual parent, Individual parent2) {
         Task[] parentTasks = parent.getSchedule().getTasks();
         Task[] parent2Tasks = parent2.getSchedule().getTasks();
