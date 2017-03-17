@@ -8,7 +8,7 @@ package artificial_intelligence;
  * @since 10.03.2017
  */
 public class Main {
-    private static final String TEST_DATA = "assets/def_small/10_5_8_5.def";
+    private static final String TEST_DATA = "assets/def_small/10_7_10_7.def";
 
     /**
      * Main function
@@ -18,15 +18,15 @@ public class Main {
     public static void main(String[] args) {
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(TEST_DATA);
         int generation = 0;
-        Population population0 = geneticAlgorithm.initializePopulation(0);
-        population0.evaluateDuration();
-        System.out.println(population0.toString());
+        Population population = geneticAlgorithm.initializePopulation(0);
+        population.evaluateDuration();
+        System.out.println(population.toString());
 
         while (generation < geneticAlgorithm.getGenerations()) {
-            Population population = geneticAlgorithm.initializePopulation(generation + 1);
+            generation++;
+            population = geneticAlgorithm.createNewPopulation(population, generation);
             population.evaluateDuration();
             System.out.println(population.toString());
-            generation += 1;
         }
     }
 }

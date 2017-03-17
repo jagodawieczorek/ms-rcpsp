@@ -9,6 +9,7 @@ import msrcpsp.scheduling.greedy.Greedy;
 import msrcpsp.validation.BaseValidator;
 import msrcpsp.validation.CompleteValidator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -25,11 +26,14 @@ public class GeneticAlgorithm {
     private double mutationProbability;
     private double crossoverProbability;
     private String filename;
+    private Integer tn;
     private Schedule baseSchedule;
-    private static final int DEFAULT_POP_SIZE = 100;
+    private Population newPopulation;
+    private static final int DEFAULT_POP_SIZE = 300;
     private static final int DEFAULT_GENERATIONS = 100;
     private static final double DEFAULT_MUTATION_PROBABILITY = 0.01;
     private static final double DEFAULT_CROSSOVER_PROBABILITY = 0.1;
+    private static final int DEFAULT_TOURNAMENT_SIZE = 5;
 
     /**
      * Genetic Algorithm constructor.
@@ -41,13 +45,14 @@ public class GeneticAlgorithm {
      * @param filename             - test data filename
      */
     GeneticAlgorithm(int popSize, int generations, double mutationProbability, double crossoverProbability,
-                     String filename) {
+                     String filename, int tn) {
         this.popSize = popSize;
         this.generations = generations;
         this.mutationProbability = mutationProbability;
         this.crossoverProbability = crossoverProbability;
         this.filename = filename;
         this.baseSchedule = this.getBaseSchedule(filename);
+        this.tn = tn;
     }
 
     /**
@@ -62,6 +67,7 @@ public class GeneticAlgorithm {
         this.crossoverProbability = DEFAULT_CROSSOVER_PROBABILITY;
         this.filename = filename;
         this.baseSchedule = this.getBaseSchedule(filename);
+        this.tn = DEFAULT_TOURNAMENT_SIZE;
     }
 
     /**
@@ -117,11 +123,11 @@ public class GeneticAlgorithm {
      * @return Population
      */
     Population initializePopulation(int id) {
-        Individual[] individuals = new Individual[this.getPopSize()];
+        ArrayList<Individual> individuals = new ArrayList<>();
 
         for (int i = 0; i < this.getPopSize(); i++) {
             Schedule schedule = this.randomInitializeSchedule();
-            individuals[i] = this.initializeIndividual(schedule);
+            individuals.add(this.initializeIndividual(schedule));
         }
 
         return new Population(individuals, id);
@@ -148,6 +154,95 @@ public class GeneticAlgorithm {
         BaseValidator validator = new CompleteValidator();
         System.out.println(validator.validate(schedule));
         System.out.println(validator.getErrorMessages());
+    }
+
+    Population createNewPopulation(Population population, int id) {
+        this.setNewPopulation(new Population(id));
+        Integer currentIndividual = 0;
+
+        while (currentIndividual < this.getPopSize()) {
+            Individual individual = this.select(population);
+
+            if (this.checkAction(this.crossoverProbability)) {
+                Individual parent2 = this.select(population);
+                individual = this.crossover(individual, parent2);
+            }
+
+            if (this.checkAction(this.mutationProbability)) {
+                individual = this.mutate(individual);
+            }
+
+            Schedule schedule = this.buildTimestamps(individual.getSchedule());
+            this.newPopulation.addNewIndividual(this.initializeIndividual(schedule));
+            currentIndividual++;
+        }
+
+        return this.newPopulation;
+    }
+
+    /**
+     * Select winner of tournament
+     *
+     * @param population - old population
+     * @return Individual
+     */
+    Individual select(Population population) {
+        Selector selector = new Selector(this.getTn(), population);
+        Individual individual = selector.tournament();
+
+        return individual;
+    }
+
+    Individual crossover(Individual parent, Individual parent2) {
+        Task[] parentTasks = parent.getSchedule().getTasks();
+        Task[] parent2Tasks = parent2.getSchedule().getTasks();
+        Random generator = new Random();
+        Integer crossoverPoint = generator.nextInt(parentTasks.length);
+        Task[] childTasks = new Task[parentTasks.length];
+
+        Integer currentTask = 0;
+        while (currentTask < childTasks.length) {
+            if (currentTask < crossoverPoint) {
+                childTasks[currentTask] = parentTasks[currentTask];
+            } else {
+                childTasks[currentTask] = parent2Tasks[currentTask];
+            }
+            currentTask++;
+        }
+
+        Schedule child = parent.getSchedule();
+        child.setTasks(childTasks);
+        Individual individual = new Individual(child);
+
+        return individual;
+    }
+
+    /**
+     * Mutate method
+     *
+     * @param individual - individual
+     * @return Individual
+     */
+    Individual mutate(Individual individual) {
+        Schedule schedule = individual.getSchedule();
+        Task[] tasks = schedule.getTasks();
+        Random generator = new Random();
+        Integer taskToMutate = generator.nextInt(tasks.length);
+        List<Resource> resources = schedule.getCapableResources(tasks[taskToMutate]);
+        Resource resource = resources.get(generator.nextInt(resources.size()));
+        individual.getSchedule().assign(tasks[taskToMutate], resource);
+
+        return individual;
+    }
+
+    /**
+     * Check if should do crossover / mutation
+     *
+     * @param probability - probability for true
+     * @return boolean
+     */
+    boolean checkAction(double probability) {
+        return Math.random() > 1.0 - probability;
     }
 
     /**
@@ -220,5 +315,41 @@ public class GeneticAlgorithm {
      */
     public void setCrossoverProbability(double crossoverProbability) {
         this.crossoverProbability = crossoverProbability;
+    }
+
+    /**
+     * Get tn
+     *
+     * @return Integer
+     */
+    public Integer getTn() {
+        return tn;
+    }
+
+    /**
+     * Set tn
+     *
+     * @param tn - tn
+     */
+    public void setTn(Integer tn) {
+        this.tn = tn;
+    }
+
+    /**
+     * Get new population
+     *
+     * @return Population
+     */
+    public Population getNewPopulation() {
+        return newPopulation;
+    }
+
+    /**
+     * Set new population
+     *
+     * @param newPopulation - new population
+     */
+    public void setNewPopulation(Population newPopulation) {
+        this.newPopulation = newPopulation;
     }
 }
