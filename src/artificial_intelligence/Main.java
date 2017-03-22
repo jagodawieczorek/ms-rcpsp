@@ -1,5 +1,9 @@
 package artificial_intelligence;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+
 /**
  * Genetic Algorithm class
  *
@@ -8,7 +12,7 @@ package artificial_intelligence;
  * @since 10.03.2017
  */
 public class Main {
-    private static final String TEST_DATA = "assets/def_small/10_7_10_7.def";
+    private static final String TEST_DATA = "assets/def_small/200_20_55_9.def";
 
     /**
      * Main function
@@ -20,13 +24,29 @@ public class Main {
         int generation = 0;
         Population population = geneticAlgorithm.initializePopulation(0);
         population.evaluateDuration();
-        System.out.println(population.toString());
+        try {
+            PrintWriter pw = new PrintWriter(new File("assets/ms-rcpsp.csv"));
+            StringBuilder sb = new StringBuilder();
+            sb.append("id");
+            sb.append(';');
+            sb.append("best");
+            sb.append(';');
+            sb.append("worst");
+            sb.append(';');
+            sb.append("avg");
+            sb.append('\n');
 
-        while (generation < geneticAlgorithm.getGenerations()) {
-            generation++;
-            population = geneticAlgorithm.createNewPopulation(population, generation);
-            population.evaluateDuration();
-            System.out.println(population.toString());
+            while (generation < geneticAlgorithm.getGenerations()) {
+                generation++;
+                population = geneticAlgorithm.createNewPopulation(population, generation);
+                population.evaluateDuration();
+                sb.append(population.toString());
+            }
+
+            pw.write(sb.toString());
+            pw.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

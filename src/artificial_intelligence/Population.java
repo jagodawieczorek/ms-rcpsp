@@ -52,8 +52,7 @@ public class Population {
      * @return String
      */
     public String toString() {
-        return "Id: " + this.id + ", bestTime: " + this.bestTime + ", worstTime: " + this.worstTime + ", avgTime: "
-                + this.avgTime + ", sum time: " + this.sumTime;
+        return this.id + ";" + this.bestTime + ";" + this.worstTime + ";" + this.avgTime + '\n';
     }
 
     /**
@@ -80,7 +79,7 @@ public class Population {
         this.bestTime = bestTime;
         this.worstTime = worstTime;
         this.sumTime = sumTime;
-        this.avgTime = sumTime/individuals.size();
+        this.avgTime = sumTime / individuals.size();
     }
 
     /**

@@ -23,6 +23,15 @@ public class Individual {
     }
 
     /**
+     * Copy constructor.
+     *
+     * @param another - another Individual
+     */
+    public Individual(Individual another) {
+        this.schedule = new Schedule(another.schedule);
+    }
+
+    /**
      * Get schedule
      *
      * @return Schedule

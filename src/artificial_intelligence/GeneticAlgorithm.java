@@ -110,8 +110,8 @@ public class GeneticAlgorithm {
      */
     Schedule buildTimestamps(Schedule schedule) {
         Greedy greedy = new Greedy(schedule.getSuccesors());
-        greedy.buildTimestamps(schedule);
         schedule.setEvaluator(new DurationEvaluator(schedule));
+        greedy.buildTimestamps(schedule);
 
         return schedule;
     }
@@ -195,7 +195,7 @@ public class GeneticAlgorithm {
      */
     Individual select(Population population) {
         Selector selector = new Selector(this.getTn(), population);
-        Individual individual = selector.tournament();
+        Individual individual = new Individual(selector.tournament());
 
         return individual;
     }
