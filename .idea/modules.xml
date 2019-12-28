@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/AI.iml" filepath="$PROJECT_DIR$/.idea/AI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ms-rcpsp.iml" filepath="$PROJECT_DIR$/.idea/modules/ms-rcpsp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ms-rcpsp.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ms-rcpsp.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ms-rcpsp.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ms-rcpsp.test.iml" />
     </modules>
   </component>
 </project>
